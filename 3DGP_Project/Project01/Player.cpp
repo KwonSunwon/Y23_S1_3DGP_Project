@@ -301,6 +301,7 @@ void CTankPlayer::RotateGun(float fAngle)
 		m_fGunAngle = m_fGunAngle > 0 ? 5.0f : -5.0f;
 	}
 
+	// DEBUG
 	//OutputDebugString((LPCWSTR)std::to_wstring(m_fGunAngle).c_str());
 	//OutputDebugString(L"\n");
 	

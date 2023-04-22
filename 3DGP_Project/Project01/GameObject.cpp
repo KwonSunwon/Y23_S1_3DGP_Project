@@ -411,3 +411,11 @@ void CAxisObject::Render(HDC hDCFrameBuffer, CCamera* pCamera)
 	m_pMesh->Render(hDCFrameBuffer);
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+void CWallObject::Render(HDC hDCFrameBuffer, CCamera* pCamera)
+{
+	CGraphicsPipeline::SetWorldTransform(&m_xmf4x4World);
+
+	m_pMesh->Render(hDCFrameBuffer);
+}

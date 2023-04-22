@@ -3,8 +3,7 @@
 #include "Mesh.h"
 #include "Camera.h"
 
-class CGameObject
-{
+class CGameObject {
 public:
 	CGameObject() { }
 	virtual ~CGameObject();
@@ -14,13 +13,13 @@ public:
 
 	bool						m_bActive = true;
 
-	CMesh*						m_pMesh = NULL;
+	CMesh* m_pMesh = NULL;
 	XMFLOAT4X4					m_xmf4x4Transform = Matrix4x4::Identity();
 	XMFLOAT4X4					m_xmf4x4World = Matrix4x4::Identity();
 
 	BoundingOrientedBox			m_xmOOBB = BoundingOrientedBox();
 
-	CGameObject*				m_pObjectCollided = NULL;
+	CGameObject* m_pObjectCollided = NULL;
 	DWORD						m_dwDefaultColor = RGB(255, 0, 0);
 	DWORD						m_dwColor = RGB(255, 0, 0);
 
@@ -28,18 +27,18 @@ public:
 	float						m_fMovingSpeed = 0.0f;
 	float						m_fMovingRange = 0.0f;
 
-	CGameObject*				m_pParent = NULL;
-	CGameObject*				m_pChild = NULL;
-	CGameObject*				m_pSibling = NULL;
+	CGameObject* m_pParent = NULL;
+	CGameObject* m_pChild = NULL;
+	CGameObject* m_pSibling = NULL;
 
 public:
 	void SetActive(bool bActive) { m_bActive = bActive; }
-	void SetMesh(CMesh *pMesh) { m_pMesh = pMesh; if (pMesh) pMesh->AddRef(); }
+	void SetMesh(CMesh* pMesh) { m_pMesh = pMesh; if (pMesh) pMesh->AddRef(); }
 
 	void SetDefaultColor(DWORD dwColor) { m_dwColor = m_dwDefaultColor = dwColor; }
 	void SetColor(DWORD dwColor) { m_dwColor = dwColor; }
 
-	void SetRotationTransform(XMFLOAT4X4 *pmxf4x4Transform);
+	void SetRotationTransform(XMFLOAT4X4* pmxf4x4Transform);
 
 	void SetPosition(float x, float y, float z);
 	void SetPosition(XMFLOAT3& xmf3Position);
@@ -81,8 +80,7 @@ public:
 	CGameObject* FindFrame(_TCHAR* pstrFrameName);
 };
 
-class CRotatingObject : public CGameObject
-{
+class CRotatingObject : public CGameObject {
 public:
 	CRotatingObject();
 	virtual ~CRotatingObject();
@@ -96,8 +94,7 @@ public:
 	virtual void Animate(float fElapsedTime);
 };
 
-class CExplosiveObject : public CRotatingObject
-{
+class CExplosiveObject : public CRotatingObject {
 public:
 	CExplosiveObject();
 	virtual ~CExplosiveObject();
@@ -115,14 +112,13 @@ public:
 	virtual void Render(HDC hDCFrameBuffer, CCamera* pCamera);
 
 public:
-	static CMesh*				m_pExplosionMesh;
+	static CMesh* m_pExplosionMesh;
 	static XMFLOAT3				m_pxmf3SphereVectors[EXPLOSION_DEBRISES];
 
 	static void PrepareExplosion();
 };
 
-class CFloorObject : public CGameObject
-{
+class CFloorObject : public CGameObject {
 public:
 	CFloorObject();
 	virtual ~CFloorObject();
@@ -134,8 +130,7 @@ public:
 	virtual void Render(HDC hDCFrameBuffer, CCamera* pCamera);
 };
 
-class CBulletObject : public CRotatingObject
-{
+class CBulletObject : public CRotatingObject {
 public:
 	CBulletObject(float fEffectiveRange);
 	virtual ~CBulletObject();
@@ -151,17 +146,25 @@ public:
 	float						m_fElapsedTimeAfterFire = 0.0f;
 	float						m_fLockingDelayTime = 0.3f;
 	float						m_fLockingTime = 4.0f;
-	CGameObject*				m_pLockedObject = NULL;
+	CGameObject* m_pLockedObject = NULL;
 
 	void SetFirePosition(XMFLOAT3 xmf3FirePosition);
 	void Reset();
 };
 
-class CAxisObject : public CGameObject
-{
+class CAxisObject : public CGameObject {
 public:
 	CAxisObject() { }
 	virtual ~CAxisObject() { }
+
+	virtual void Render(HDC hDCFrameBuffer, CCamera* pCamera);
+};
+
+
+class CWallObject : public CGameObject {
+public:
+	CWallObject() {}
+	virtual ~CWallObject() {}
 
 	virtual void Render(HDC hDCFrameBuffer, CCamera* pCamera);
 };
