@@ -24,6 +24,9 @@
 #include <DirectXColors.h>
 #include <DirectXCollision.h>
 
+// 디버그 출력
+#include <string>
+
 using namespace DirectX;
 using namespace DirectX::PackedVector;
 
@@ -42,6 +45,7 @@ using namespace DirectX::PackedVector;
 #define RANDOM_COLOR			(0xFF000000 | ((rand() * 0xFFFFFF) / RAND_MAX))
 
 #define DegreeToRadian(x)		float((x)*3.141592654f/180.0f)
+#define RadianToDegree(x)		float((x)*180.0f/3.141592654f)
 
 #define EPSILON					1.0e-6f
 

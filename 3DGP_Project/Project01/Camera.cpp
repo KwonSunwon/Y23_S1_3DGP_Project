@@ -127,10 +127,18 @@ void CCamera::Rotate(float fPitch, float fYaw, float fRoll)
 
 void CCamera::Update(CPlayer* pPlayer, XMFLOAT3& xmf3LookAt, float fTimeElapsed)
 {
+	// 카메라가 플레이어의 터렛의 위치를 바라보도록 설정
+	XMFLOAT3 xmf3TurretLook = ((CTankPlayer*)pPlayer)->m_pTurret->GetLook();
+	XMFLOAT3 xmf3TurretUp = ((CTankPlayer*)pPlayer)->m_pTurret->GetUp();
+	XMFLOAT3 xmf3TurretRight = ((CTankPlayer*)pPlayer)->m_pTurret->GetRight();
+
 	XMFLOAT4X4 mtxRotate = Matrix4x4::Identity();
-	mtxRotate._11 = pPlayer->m_xmf3Right.x; mtxRotate._21 = pPlayer->m_xmf3Up.x; mtxRotate._31 = pPlayer->m_xmf3Look.x;
+	/*mtxRotate._11 = pPlayer->m_xmf3Right.x; mtxRotate._21 = pPlayer->m_xmf3Up.x; mtxRotate._31 = pPlayer->m_xmf3Look.x;
 	mtxRotate._12 = pPlayer->m_xmf3Right.y; mtxRotate._22 = pPlayer->m_xmf3Up.y; mtxRotate._32 = pPlayer->m_xmf3Look.y;
-	mtxRotate._13 = pPlayer->m_xmf3Right.z; mtxRotate._23 = pPlayer->m_xmf3Up.z; mtxRotate._33 = pPlayer->m_xmf3Look.z;
+	mtxRotate._13 = pPlayer->m_xmf3Right.z; mtxRotate._23 = pPlayer->m_xmf3Up.z; mtxRotate._33 = pPlayer->m_xmf3Look.z;*/
+	mtxRotate._11 = xmf3TurretRight.x; mtxRotate._21 = xmf3TurretUp.x; mtxRotate._31 = xmf3TurretLook.x;
+	mtxRotate._12 = xmf3TurretRight.y; mtxRotate._22 = xmf3TurretUp.y; mtxRotate._32 = xmf3TurretLook.y;
+	mtxRotate._13 = xmf3TurretRight.z; mtxRotate._23 = xmf3TurretUp.z; mtxRotate._33 = xmf3TurretLook.z;
 
 	XMFLOAT3 xmf3Offset = Vector3::TransformCoord(pPlayer->m_xmf3CameraOffset, mtxRotate);
 	XMFLOAT3 xmf3Position = Vector3::Add(pPlayer->m_xmf3Position, xmf3Offset);
@@ -147,8 +155,5 @@ void CCamera::Update(CPlayer* pPlayer, XMFLOAT3& xmf3LookAt, float fTimeElapsed)
 		m_xmf3Position = Vector3::Add(m_xmf3Position, xmf3Direction, fDistance);
 		SetLookAt(pPlayer->m_xmf3Position, pPlayer->m_xmf3Up);
 	}
-
-	//XMFLOAT4X4 mtxTranslate = pPlayer->m_pChild->m_xmf4x4World;
-	
 }
 

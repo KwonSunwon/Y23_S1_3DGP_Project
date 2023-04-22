@@ -121,6 +121,12 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 	HWND hMainWnd = CreateWindow(szWindowClass, szTitle, dwStyle, CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, NULL, NULL, hInstance, NULL);
 	if (!hMainWnd) return(FALSE);
 
+
+	// 초기 마우스의 위치를 클라이언트 좌표를 화면 중앙으로 설정
+	POINT pt = { FRAMEBUFFER_WIDTH / 2, FRAMEBUFFER_HEIGHT / 2 };
+	ClientToScreen(hMainWnd, &pt);
+	SetCursorPos(pt.x, pt.y);
+
 	gGameFramework.OnCreate(hInstance, hMainWnd);
 
 	ShowWindow(hMainWnd, nCmdShow);

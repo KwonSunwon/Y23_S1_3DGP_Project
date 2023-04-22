@@ -28,8 +28,7 @@ void CPlayer::SetCameraOffset(XMFLOAT3& xmf3CameraOffset)
 
 void CPlayer::Move(DWORD dwDirection, float fDistance)
 {
-	if (dwDirection)
-	{
+	if (dwDirection) {
 		XMFLOAT3 xmf3Shift = XMFLOAT3(0, 0, 0);
 		if (dwDirection & DIR_FORWARD) xmf3Shift = Vector3::Add(xmf3Shift, m_xmf3Look, fDistance);
 		if (dwDirection & DIR_BACKWARD) xmf3Shift = Vector3::Add(xmf3Shift, m_xmf3Look, -fDistance);
@@ -44,12 +43,10 @@ void CPlayer::Move(DWORD dwDirection, float fDistance)
 
 void CPlayer::Move(XMFLOAT3& xmf3Shift, bool bUpdateVelocity)
 {
-	if (bUpdateVelocity)
-	{
+	if (bUpdateVelocity) {
 		m_xmf3Velocity = Vector3::Add(m_xmf3Velocity, xmf3Shift);
 	}
-	else
-	{
+	else {
 		m_xmf3Position = Vector3::Add(xmf3Shift, m_xmf3Position);
 		m_pCamera->Move(xmf3Shift);
 	}
@@ -63,20 +60,17 @@ void CPlayer::Move(float x, float y, float z)
 void CPlayer::Rotate(float fPitch, float fYaw, float fRoll)
 {
 	m_pCamera->Rotate(fPitch, fYaw, fRoll);
-	if (fPitch != 0.0f)
-	{
+	if (fPitch != 0.0f) {
 		XMMATRIX mtxRotate = XMMatrixRotationAxis(XMLoadFloat3(&m_xmf3Right), XMConvertToRadians(fPitch));
 		m_xmf3Look = Vector3::TransformNormal(m_xmf3Look, mtxRotate);
 		m_xmf3Up = Vector3::TransformNormal(m_xmf3Up, mtxRotate);
 	}
-	if (fYaw != 0.0f)
-	{
+	if (fYaw != 0.0f) {
 		XMMATRIX mtxRotate = XMMatrixRotationAxis(XMLoadFloat3(&m_xmf3Up), XMConvertToRadians(fYaw));
 		m_xmf3Look = Vector3::TransformNormal(m_xmf3Look, mtxRotate);
 		m_xmf3Right = Vector3::TransformNormal(m_xmf3Right, mtxRotate);
 	}
-	if (fRoll != 0.0f)
-	{
+	if (fRoll != 0.0f) {
 		XMMATRIX mtxRotate = XMMatrixRotationAxis(XMLoadFloat3(&m_xmf3Look), XMConvertToRadians(fRoll));
 		m_xmf3Up = Vector3::TransformNormal(m_xmf3Up, mtxRotate);
 		m_xmf3Right = Vector3::TransformNormal(m_xmf3Right, mtxRotate);
@@ -139,8 +133,7 @@ CAirplanePlayer::CAirplanePlayer()
 	SetColor(RGB(0, 0, 255));
 
 	CCubeMesh* pBulletMesh = new CCubeMesh(1.0f, 4.0f, 1.0f);
-	for (int i = 0; i < BULLETS; i++)
-	{
+	for (int i = 0; i < BULLETS; i++) {
 		m_ppBullets[i] = new CBulletObject(m_fBulletEffectiveRange);
 		m_ppBullets[i]->SetMesh(pBulletMesh);
 		m_ppBullets[i]->SetRotationAxis(XMFLOAT3(0.0f, 1.0f, 0.0f));
@@ -159,10 +152,8 @@ void CAirplanePlayer::Animate(float fElapsedTime)
 {
 	CPlayer::Animate(fElapsedTime);
 
-	for (int i = 0; i < BULLETS; i++)
-	{
-		if (m_ppBullets[i]->m_bActive)
-		{
+	for (int i = 0; i < BULLETS; i++) {
+		if (m_ppBullets[i]->m_bActive) {
 			m_ppBullets[i]->Animate(fElapsedTime);
 			m_ppBullets[i]->ComputeWorldTransform(NULL);
 		}
@@ -188,17 +179,14 @@ void CAirplanePlayer::Render(HDC hDCFrameBuffer, CCamera* pCamera)
 void CAirplanePlayer::FireBullet(CGameObject* pLockedObject)
 {
 	CBulletObject* pBulletObject = NULL;
-	for (int i = 0; i < BULLETS; i++)
-	{
-		if (!m_ppBullets[i]->m_bActive)
-		{
+	for (int i = 0; i < BULLETS; i++) {
+		if (!m_ppBullets[i]->m_bActive) {
 			pBulletObject = m_ppBullets[i];
 			break;
 		}
 	}
 
-	if (pBulletObject)
-	{
+	if (pBulletObject) {
 		XMFLOAT3 xmf3Position = GetPosition();
 		XMFLOAT3 xmf3Direction = GetUp();
 		XMFLOAT3 xmf3FirePosition = Vector3::Add(xmf3Position, Vector3::ScalarProduct(xmf3Direction, 6.0f, false));
@@ -210,8 +198,7 @@ void CAirplanePlayer::FireBullet(CGameObject* pLockedObject)
 		pBulletObject->SetColor(RGB(255, 0, 0));
 		pBulletObject->SetActive(true);
 
-		if (pLockedObject)
-		{
+		if (pLockedObject) {
 			pBulletObject->m_pLockedObject = pLockedObject;
 			pBulletObject->SetColor(RGB(0, 0, 255));
 		}
@@ -241,8 +228,7 @@ CTankPlayer::CTankPlayer()
 	m_pTurret->SetChild(m_pGun);
 
 	CCubeMesh* pBulletMesh = new CCubeMesh(1.0f, 1.0f, 4.0f);
-	for (int i = 0; i < BULLETS; i++)
-	{
+	for (int i = 0; i < BULLETS; i++) {
 		m_ppBullets[i] = new CBulletObject(m_fBulletEffectiveRange);
 		m_ppBullets[i]->SetMesh(pBulletMesh);
 		m_ppBullets[i]->SetRotationAxis(XMFLOAT3(0.0f, 0.0f, 1.0f));
@@ -261,13 +247,11 @@ void CTankPlayer::Animate(float fElapsedTime)
 {
 	CPlayer::Animate(fElapsedTime);
 	ComputeWorldTransform(NULL);
-/*수정*/	
+	/*수정*/
 	UpdateBoundingBox();
 
-	for (int i = 0; i < BULLETS; i++)
-	{
-		if (m_ppBullets[i]->m_bActive)
-		{
+	for (int i = 0; i < BULLETS; i++) {
+		if (m_ppBullets[i]->m_bActive) {
 			m_ppBullets[i]->Animate(fElapsedTime);
 			m_ppBullets[i]->ComputeWorldTransform(NULL);
 		}
@@ -284,17 +268,14 @@ void CTankPlayer::Render(HDC hDCFrameBuffer, CCamera* pCamera)
 void CTankPlayer::FireBullet(CGameObject* pLockedObject)
 {
 	CBulletObject* pBulletObject = NULL;
-	for (int i = 0; i < BULLETS; i++)
-	{
-		if (!m_ppBullets[i]->m_bActive)
-		{
+	for (int i = 0; i < BULLETS; i++) {
+		if (!m_ppBullets[i]->m_bActive) {
 			pBulletObject = m_ppBullets[i];
 			break;
 		}
 	}
 
-	if (pBulletObject)
-	{
+	if (pBulletObject) {
 		XMFLOAT3 xmf3Position = m_pGun->GetPosition();
 		XMFLOAT3 xmf3Direction = m_pGun->GetLook();
 		XMFLOAT3 xmf3FirePosition = Vector3::Add(xmf3Position, Vector3::ScalarProduct(xmf3Direction, 6.0f, false));
@@ -306,10 +287,23 @@ void CTankPlayer::FireBullet(CGameObject* pLockedObject)
 		pBulletObject->SetColor(RGB(255, 0, 0));
 		pBulletObject->SetActive(true);
 
-		if (pLockedObject)
-		{
+		if (pLockedObject) {
 			pBulletObject->m_pLockedObject = pLockedObject;
 			pBulletObject->SetColor(RGB(0, 0, 255));
 		}
 	}
+}
+
+void CTankPlayer::RotateGun(float fAngle)
+{
+	m_fGunAngle += fAngle;
+	if (abs(m_fGunAngle) > 5.0f) {
+		m_fGunAngle = m_fGunAngle > 0 ? 5.0f : -5.0f;
+	}
+
+	//OutputDebugString((LPCWSTR)std::to_wstring(m_fGunAngle).c_str());
+	//OutputDebugString(L"\n");
+	
+	m_pGun->m_xmf4x4Transform = Matrix4x4::RotationYawPitchRoll(m_fGunAngle , 0.0f, 0.0f);
+	m_pGun->SetPosition(0.0f, 1.25f, 4.0f);
 }

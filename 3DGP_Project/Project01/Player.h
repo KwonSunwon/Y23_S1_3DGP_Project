@@ -80,8 +80,11 @@ public:
 	float						m_fBulletEffectiveRange = 150.0f;
 	CBulletObject*				m_ppBullets[BULLETS];
 
+	// 포신의 각도가 일정 이상 변하지 않도록 수정
+	float m_fGunAngle = 0.0f;
+
 	void RotateTurret(float fAngle) { m_pTurret->Rotate(0.0f, fAngle, 0.0f); }
-	void RotateGun(float fAngle) { m_pGun->Rotate(fAngle, 0.0f, 0.0f); }
+	void RotateGun(float fAngle);
 
 	void FireBullet(CGameObject* pLockedObject);
 

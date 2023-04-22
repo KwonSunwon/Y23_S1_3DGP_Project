@@ -12,11 +12,13 @@ void CGameFramework::OnCreate(HINSTANCE hInstance, HWND hMainWnd)
 	m_hInstance = hInstance;
 	m_hWnd = hMainWnd;
 
-	BuildFrameBuffer(); 
+	BuildFrameBuffer();
 
-	BuildObjects(); 
+	BuildObjects();
 
 	_tcscpy_s(m_pszFrameRate, _T("LabProject ("));
+
+	GetCursorPos(&m_ptOldCursorPos);
 }
 
 void CGameFramework::OnDestroy()
@@ -33,12 +35,12 @@ void CGameFramework::BuildFrameBuffer()
 
 	HDC hDC = ::GetDC(m_hWnd);
 
-    m_hDCFrameBuffer = ::CreateCompatibleDC(hDC);
+	m_hDCFrameBuffer = ::CreateCompatibleDC(hDC);
 	m_hBitmapFrameBuffer = ::CreateCompatibleBitmap(hDC, m_rcClient.right - m_rcClient.left, m_rcClient.bottom - m_rcClient.top);
-    ::SelectObject(m_hDCFrameBuffer, m_hBitmapFrameBuffer);
+	::SelectObject(m_hDCFrameBuffer, m_hBitmapFrameBuffer);
 
 	::ReleaseDC(m_hWnd, hDC);
-    ::SetBkMode(m_hDCFrameBuffer, TRANSPARENT);
+	::SetBkMode(m_hDCFrameBuffer, TRANSPARENT);
 }
 
 void CGameFramework::ClearFrameBuffer(DWORD dwColor)
@@ -55,10 +57,10 @@ void CGameFramework::ClearFrameBuffer(DWORD dwColor)
 }
 
 void CGameFramework::PresentFrameBuffer()
-{    
-    HDC hDC = ::GetDC(m_hWnd);
-    ::BitBlt(hDC, m_rcClient.left, m_rcClient.top, m_rcClient.right - m_rcClient.left, m_rcClient.bottom - m_rcClient.top, m_hDCFrameBuffer, m_rcClient.left, m_rcClient.top, SRCCOPY);
-    ::ReleaseDC(m_hWnd, hDC);
+{
+	HDC hDC = ::GetDC(m_hWnd);
+	::BitBlt(hDC, m_rcClient.left, m_rcClient.top, m_rcClient.right - m_rcClient.left, m_rcClient.bottom - m_rcClient.top, m_hDCFrameBuffer, m_rcClient.left, m_rcClient.top, SRCCOPY);
+	::ReleaseDC(m_hWnd, hDC);
 }
 
 void CGameFramework::BuildObjects()
@@ -81,8 +83,7 @@ void CGameFramework::BuildObjects()
 
 void CGameFramework::ReleaseObjects()
 {
-	if (m_pScene)
-	{
+	if (m_pScene) {
 		m_pScene->ReleaseObjects();
 		delete m_pScene;
 	}
@@ -94,21 +95,20 @@ void CGameFramework::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM
 {
 	if (m_pScene) m_pScene->OnProcessingMouseMessage(hWnd, nMessageID, wParam, lParam);
 
-	switch (nMessageID)
-	{
+	switch (nMessageID) {
 	case WM_RBUTTONDOWN:
 	case WM_LBUTTONDOWN:
-		::SetCapture(hWnd);
+		// 피킹 사용 안함
+		/*::SetCapture(hWnd);
 		::GetCursorPos(&m_ptOldCursorPos);
-		if (nMessageID == WM_RBUTTONDOWN)
-		{
+		if (nMessageID == WM_RBUTTONDOWN) {
 			m_pLockedObject = m_pScene->PickObjectPointedByCursor(LOWORD(lParam), HIWORD(lParam), m_pPlayer->m_pCamera);
 			if (m_pLockedObject) m_pLockedObject->SetColor(RGB(0, 0, 0));
-		}
+		}*/
 		break;
 	case WM_LBUTTONUP:
 	case WM_RBUTTONUP:
-		::ReleaseCapture();
+		//::ReleaseCapture();
 		break;
 	case WM_MOUSEMOVE:
 		break;
@@ -121,11 +121,9 @@ void CGameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPA
 {
 	if (m_pScene) m_pScene->OnProcessingKeyboardMessage(hWnd, nMessageID, wParam, lParam);
 
-	switch (nMessageID)
-	{
+	switch (nMessageID) {
 	case WM_KEYDOWN:
-		switch (wParam)
-		{
+		switch (wParam) {
 		case VK_ESCAPE:
 			::PostQuitMessage(0);
 			break;
@@ -159,8 +157,7 @@ void CGameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPA
 
 LRESULT CALLBACK CGameFramework::OnProcessingWindowMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
 {
-	switch (nMessageID)
-	{
+	switch (nMessageID) {
 	case WM_ACTIVATE:
 	{
 		if (LOWORD(wParam) == WA_INACTIVE)
@@ -189,8 +186,7 @@ LRESULT CALLBACK CGameFramework::OnProcessingWindowMessage(HWND hWnd, UINT nMess
 void CGameFramework::ProcessInput()
 {
 	static UCHAR pKeyBuffer[256];
-	if (GetKeyboardState(pKeyBuffer))
-	{
+	if (GetKeyboardState(pKeyBuffer)) {
 		DWORD dwDirection = 0;
 		if (pKeyBuffer[VK_UP] & 0xF0) dwDirection |= DIR_FORWARD;
 		if (pKeyBuffer[VK_DOWN] & 0xF0) dwDirection |= DIR_BACKWARD;
@@ -202,7 +198,7 @@ void CGameFramework::ProcessInput()
 		if (dwDirection) m_pPlayer->Move(dwDirection, 0.15f);
 	}
 
-	if (GetCapture() == m_hWnd)
+	/*if (GetCapture() == m_hWnd)
 	{
 		SetCursor(NULL);
 		POINT ptCursorPos;
@@ -217,6 +213,18 @@ void CGameFramework::ProcessInput()
 			else
 				m_pPlayer->Rotate(0.0f, cxMouseDelta, 0.0f);
 		}
+	}*/
+
+	// 플레이어의 터렛과 포신이 마우스 커서에 따라 움직이도록
+	POINT ptCursorPos;
+	GetCursorPos(&ptCursorPos);
+	float cxMouseDelta = (float)(ptCursorPos.x - m_ptOldCursorPos.x) / 3.0f;
+	float cyMouseDelta = (float)(ptCursorPos.y - m_ptOldCursorPos.y) / 3.0f;
+	SetCursorPos(m_ptOldCursorPos.x, m_ptOldCursorPos.y);
+
+	if (cxMouseDelta || cyMouseDelta) {
+		((CTankPlayer*)m_pPlayer)->RotateTurret(cxMouseDelta / 20.0f);
+		((CTankPlayer*)m_pPlayer)->RotateGun(cyMouseDelta / 35.0f);
 	}
 
 	m_pPlayer->Update(m_GameTimer.GetTimeElapsed());
@@ -230,14 +238,14 @@ void CGameFramework::AnimateObjects()
 }
 
 void CGameFramework::FrameAdvance()
-{    
+{
 	m_GameTimer.Tick(60.0f);
 
 	ProcessInput();
 
 	AnimateObjects();
 
-    ClearFrameBuffer(RGB(255, 255, 255));
+	ClearFrameBuffer(RGB(255, 255, 255));
 
 	CCamera* pCamera = m_pPlayer->GetCamera();
 	if (m_pScene) m_pScene->Render(m_hDCFrameBuffer, pCamera);
