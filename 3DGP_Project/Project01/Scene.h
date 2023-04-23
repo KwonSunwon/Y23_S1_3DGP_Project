@@ -17,6 +17,7 @@ private:
 	CFloorObject*				m_pFloorObject = NULL;
 
 	CPlayer*					m_pPlayer = NULL;
+	CPlayer*					m_pTurnPlayer = NULL;
 
 #ifdef _WITH_DRAW_AXIS
 	CGameObject*				m_pWorldAxis = NULL;

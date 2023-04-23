@@ -27,6 +27,8 @@
 // 디버그 출력
 #include <string>
 
+#include <vector>
+
 using namespace DirectX;
 using namespace DirectX::PackedVector;
 
