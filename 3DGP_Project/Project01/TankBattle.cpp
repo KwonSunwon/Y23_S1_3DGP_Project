@@ -57,6 +57,9 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 		}
 		else
 		{
+			// 마우스를 빠르게 움직여 화면 밖으로 나갔다 들어오면 커서가 다시 보이는 현상 해결
+			// 매 프레임 진행마다, 커서를 숨기도록 설정
+			SetCursor(NULL);
 			gGameFramework.FrameAdvance();
 		}
 	}
@@ -92,7 +95,8 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 	wcex.cbWndExtra = 0;
 	wcex.hInstance = hInstance;
 	wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_LABPROJECT0202));
-	wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
+	//wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
+	wcex.hCursor = NULL;
 	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
 	wcex.lpszMenuName = NULL;
 	wcex.lpszClassName = szWindowClass;
