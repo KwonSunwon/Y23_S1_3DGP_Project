@@ -24,7 +24,7 @@ void CScene::BuildObjects()
 	m_pFloorObject->SetColor(RGB(0, 0, 0));
 	m_pFloorObject->m_pxmf4FloorPlane = XMFLOAT4(0.0f, +1.0f, 0.0f, 0.0f);
 
-	CCubeMesh* pCubeMesh = new CCubeMesh(10.0f, 5.0f, 4.0f);
+	/*CCubeMesh* pCubeMesh = new CCubeMesh(10.0f, 5.0f, 4.0f);
 
 	m_nObjects = 2;
 	m_ppObjects = new CGameObject * [m_nObjects];
@@ -39,9 +39,9 @@ void CScene::BuildObjects()
 	pWallObject->SetMesh(pCubeMesh);
 	pWallObject->SetColor(RGB(0, 0, 255));
 	pWallObject->SetPosition(-20.0f, 2.5f, 0.0f);
-	m_ppObjects[1] = pWallObject;
+	m_ppObjects[1] = pWallObject;*/
 
-	/*CCubeMesh* pCubeMesh = new CCubeMesh(4.0f, 4.0f, 4.0f);
+	CCubeMesh* pCubeMesh = new CCubeMesh(4.0f, 4.0f, 4.0f);
 
 	m_nObjects = 10;
 	m_ppObjects = new CGameObject * [m_nObjects];
@@ -124,7 +124,7 @@ void CScene::BuildObjects()
 	pExplosiveObject->SetPosition(+15.0f, 0.0f, 0.0f);
 	pExplosiveObject->SetRotationAxis(XMFLOAT3(1.0f, 0.0f, 0.0f));
 	pExplosiveObject->SetRotationSpeed(90.06f);
-	m_ppObjects[9] = pExplosiveObject;*/
+	m_ppObjects[9] = pExplosiveObject;
 
 #ifdef _WITH_DRAW_AXIS
 	m_pWorldAxis = new CGameObject();
@@ -283,6 +283,7 @@ void CScene::Animate(float fElapsedTime)
 
 	CheckObjectByObjectCollisions();
 	CheckObjectByBulletCollisions();
+
 	CheckObjectByPlayerCollisions();
 }
 

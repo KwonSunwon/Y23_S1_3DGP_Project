@@ -180,8 +180,7 @@ void CGameObject::Animate(float fElapsedTime)
 	if (m_pSibling) m_pSibling->Animate(fElapsedTime);
 	if (m_pChild) m_pChild->Animate(fElapsedTime);
 
-/*¼öÁ¤*/	
-	//UpdateBoundingBox();
+	UpdateBoundingBox();
 }
 
 CGameObject* CGameObject::FindFrame(_TCHAR* pstrFrameName)
