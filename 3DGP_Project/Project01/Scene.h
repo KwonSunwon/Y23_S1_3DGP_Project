@@ -29,6 +29,7 @@ public:
 
 	void CheckObjectByObjectCollisions();
 	void CheckObjectByBulletCollisions();
+	void CheckObjectByPlayerCollisions();
 
 	virtual void Animate(float fElapsedTime);
 	virtual void Render(HDC hDCFrameBuffer, CCamera* pCamera);

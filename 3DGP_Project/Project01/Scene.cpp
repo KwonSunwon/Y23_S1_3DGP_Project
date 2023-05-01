@@ -26,7 +26,7 @@ void CScene::BuildObjects()
 
 	CCubeMesh* pCubeMesh = new CCubeMesh(10.0f, 5.0f, 4.0f);
 
-	m_nObjects = 1;
+	m_nObjects = 2;
 	m_ppObjects = new CGameObject * [m_nObjects];
 
 	CWallObject *pWallObject = new CWallObject();
@@ -34,6 +34,12 @@ void CScene::BuildObjects()
 	pWallObject->SetColor(RGB(255, 0, 0));
 	pWallObject->SetPosition(40.0f, 2.5f, 0.0f);
 	m_ppObjects[0] = pWallObject;
+
+	pWallObject = new CWallObject();
+	pWallObject->SetMesh(pCubeMesh);
+	pWallObject->SetColor(RGB(0, 0, 255));
+	pWallObject->SetPosition(-20.0f, 2.5f, 0.0f);
+	m_ppObjects[1] = pWallObject;
 
 	/*CCubeMesh* pCubeMesh = new CCubeMesh(4.0f, 4.0f, 4.0f);
 
@@ -255,6 +261,14 @@ void CScene::CheckObjectByBulletCollisions()
 	}
 }
 
+void CScene::CheckObjectByPlayerCollisions()
+{
+	for (int i = 0; i < m_nObjects; ++i) {
+		if (m_ppObjects[i]->m_xmOOBB.Intersects(m_pPlayer->m_xmOOBB))
+			m_pPlayer->OnCollisionByWall();
+	}
+}
+
 void CScene::Animate(float fElapsedTime)
 {
 	m_pFloorObject->Animate(fElapsedTime);
@@ -268,8 +282,8 @@ void CScene::Animate(float fElapsedTime)
 	}
 
 	CheckObjectByObjectCollisions();
-
 	CheckObjectByBulletCollisions();
+	CheckObjectByPlayerCollisions();
 }
 
 void CScene::Render(HDC hDCFrameBuffer, CCamera* pCamera)

@@ -95,6 +95,7 @@ void CPlayer::LookAt(XMFLOAT3& xmf3LookAt, XMFLOAT3& xmf3Up)
 
 void CPlayer::Update(float fTimeElapsed)
 {
+	m_xmf3OldPosition = m_xmf3Position;
 	Move(m_xmf3Velocity, false);
 
 	m_pCamera->Update(this, m_xmf3Position, fTimeElapsed);
@@ -125,6 +126,12 @@ void CPlayer::OnUpdateTransform()
 void CPlayer::Render(HDC hDCFrameBuffer, CCamera* pCamera)
 {
 	CGameObject::Render(hDCFrameBuffer, pCamera);
+}
+
+void CPlayer::OnCollisionByWall()
+{
+	m_xmf3Position = m_xmf3OldPosition;
+	m_xmf3Velocity = XMFLOAT3(0.0f, 0.0f, 0.0f);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////

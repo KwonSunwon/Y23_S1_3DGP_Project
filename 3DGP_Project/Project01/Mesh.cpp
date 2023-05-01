@@ -58,22 +58,18 @@ void CMesh::Render(HDC hDCFrameBuffer)
 
 	for (int j = 0; j < m_nPolygons; j++) {
 		// 채워진 polygon으로 그리기
-		int nVertices = m_ppPolygons[j]->m_nVertices;
+		/*int nVertices = m_ppPolygons[j]->m_nVertices;
 		std::vector<POINT> project;
-
 		for (int i = 0; i < nVertices; i++) {
 			XMFLOAT3 temp = CGraphicsPipeline::Project(m_ppPolygons[j]->m_pVertices[i].m_xmf3Position);
-
-			// 스크린 좌표로 변환하기 전에 -1 ~ 1 사이인지 확인해서 모든 정점이 벗어나면 그리지 않는 코드 추가해야 렉이 안걸릴듯
 			temp = CGraphicsPipeline::ScreenTransform(temp);
 			POINT pointTemp{ temp.x, temp.y };
 			project.push_back(pointTemp);
 		}
-
 		SetPolyFillMode(hDCFrameBuffer, WINDING);
-		Polygon(hDCFrameBuffer, project.data(), nVertices);
+		Polygon(hDCFrameBuffer, project.data(), nVertices);*/
 
-		/*int nVertices = m_ppPolygons[j]->m_nVertices;
+		int nVertices = m_ppPolygons[j]->m_nVertices;
 		CVertex* pVertices = m_ppPolygons[j]->m_pVertices;
 
 		f3PreviousProject = f3InitialProject = CGraphicsPipeline::Project(pVertices[0].m_xmf3Position);
@@ -86,7 +82,7 @@ void CMesh::Render(HDC hDCFrameBuffer)
 			f3PreviousProject = f3CurrentProject;
 			bPreviousInside = bCurrentInside;
 		}
-		if (((0.0f <= f3InitialProject.z) && (f3InitialProject.z <= 1.0f)) && ((bInitialInside || bPreviousInside))) ::Draw2DLine(hDCFrameBuffer, f3PreviousProject, f3InitialProject);*/
+		if (((0.0f <= f3InitialProject.z) && (f3InitialProject.z <= 1.0f)) && ((bInitialInside || bPreviousInside))) ::Draw2DLine(hDCFrameBuffer, f3PreviousProject, f3InitialProject);
 	}
 }
 
