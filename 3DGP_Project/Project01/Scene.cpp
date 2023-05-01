@@ -24,7 +24,7 @@ void CScene::BuildObjects()
 	m_pFloorObject->SetColor(RGB(0, 0, 0));
 	m_pFloorObject->m_pxmf4FloorPlane = XMFLOAT4(0.0f, +1.0f, 0.0f, 0.0f);
 
-	/*CCubeMesh* pCubeMesh = new CCubeMesh(10.0f, 5.0f, 4.0f);
+	CCubeMesh* pCubeMesh = new CCubeMesh(10.0f, 5.0f, 4.0f);
 
 	m_nObjects = 2;
 	m_ppObjects = new CGameObject * [m_nObjects];
@@ -39,14 +39,14 @@ void CScene::BuildObjects()
 	pWallObject->SetMesh(pCubeMesh);
 	pWallObject->SetColor(RGB(0, 0, 255));
 	pWallObject->SetPosition(-20.0f, 2.5f, 0.0f);
-	m_ppObjects[1] = pWallObject;*/
+	m_ppObjects[1] = pWallObject;
 
-	CCubeMesh* pCubeMesh = new CCubeMesh(4.0f, 4.0f, 4.0f);
+	/*CCubeMesh* pCubeMesh = new CCubeMesh(4.0f, 4.0f, 4.0f);
 
 	m_nObjects = 10;
 	m_ppObjects = new CGameObject * [m_nObjects];
 
-	CExplosiveObject *pExplosiveObject = new CExplosiveObject();
+	CExplosiveObject* pExplosiveObject = new CExplosiveObject();
 	pExplosiveObject->SetMesh(pCubeMesh);
 	pExplosiveObject->SetColor(RGB(255, 0, 0));
 	pExplosiveObject->SetPosition(-43.5f, 0.0f, -44.0f);
@@ -124,7 +124,7 @@ void CScene::BuildObjects()
 	pExplosiveObject->SetPosition(+15.0f, 0.0f, 0.0f);
 	pExplosiveObject->SetRotationAxis(XMFLOAT3(1.0f, 0.0f, 0.0f));
 	pExplosiveObject->SetRotationSpeed(90.06f);
-	m_ppObjects[9] = pExplosiveObject;
+	m_ppObjects[9] = pExplosiveObject;*/
 
 #ifdef _WITH_DRAW_AXIS
 	m_pWorldAxis = new CGameObject();
@@ -153,11 +153,9 @@ void CScene::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam,
 
 void CScene::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
 {
-	switch (nMessageID)
-	{
+	switch (nMessageID) {
 	case WM_KEYDOWN:
-		switch (wParam)
-		{
+		switch (wParam) {
 		case '1':
 		case '2':
 		case '3':
@@ -173,8 +171,7 @@ void CScene::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wPar
 			break;
 		}
 		case 'A':
-			for (int i = 0; i < m_nObjects; i++)
-			{
+			for (int i = 0; i < m_nObjects; i++) {
 				CExplosiveObject* pExplosiveObject = (CExplosiveObject*)m_ppObjects[i];
 				pExplosiveObject->m_bBlowingUp = true;
 			}
@@ -201,12 +198,10 @@ CGameObject* CScene::PickObjectPointedByCursor(int xClient, int yClient, CCamera
 	int nIntersected = 0;
 	float fNearestHitDistance = FLT_MAX;
 	CGameObject* pNearestObject = NULL;
-	for (int i = 0; i < m_nObjects; i++)
-	{
+	for (int i = 0; i < m_nObjects; i++) {
 		float fHitDistance = FLT_MAX;
 		nIntersected = m_ppObjects[i]->PickObjectByRayIntersection(xmvPickPosition, xmmtxView, &fHitDistance);
-		if ((nIntersected > 0) && (fHitDistance < fNearestHitDistance))
-		{
+		if ((nIntersected > 0) && (fHitDistance < fNearestHitDistance)) {
 			fNearestHitDistance = fHitDistance;
 			pNearestObject = m_ppObjects[i];
 		}
@@ -217,21 +212,16 @@ CGameObject* CScene::PickObjectPointedByCursor(int xClient, int yClient, CCamera
 void CScene::CheckObjectByObjectCollisions()
 {
 	for (int i = 0; i < m_nObjects; i++) m_ppObjects[i]->m_pObjectCollided = NULL;
-	for (int i = 0; i < m_nObjects; i++)
-	{
-		for (int j = (i + 1); j < m_nObjects; j++)
-		{
-			if (m_ppObjects[i]->m_xmOOBB.Intersects(m_ppObjects[j]->m_xmOOBB))
-			{
+	for (int i = 0; i < m_nObjects; i++) {
+		for (int j = (i + 1); j < m_nObjects; j++) {
+			if (m_ppObjects[i]->m_xmOOBB.Intersects(m_ppObjects[j]->m_xmOOBB)) {
 				m_ppObjects[i]->m_pObjectCollided = m_ppObjects[j];
 				m_ppObjects[j]->m_pObjectCollided = m_ppObjects[i];
 			}
 		}
 	}
-	for (int i = 0; i < m_nObjects; i++)
-	{
-		if (m_ppObjects[i]->m_pObjectCollided)
-		{
+	for (int i = 0; i < m_nObjects; i++) {
+		if (m_ppObjects[i]->m_pObjectCollided) {
 			XMFLOAT3 xmf3MovingDirection = m_ppObjects[i]->m_xmf3MovingDirection;
 			float fMovingSpeed = m_ppObjects[i]->m_fMovingSpeed;
 			m_ppObjects[i]->m_xmf3MovingDirection = m_ppObjects[i]->m_pObjectCollided->m_xmf3MovingDirection;
@@ -247,16 +237,49 @@ void CScene::CheckObjectByObjectCollisions()
 void CScene::CheckObjectByBulletCollisions()
 {
 	CBulletObject** ppBullets = ((CTankPlayer*)m_pPlayer)->m_ppBullets;
-	for (int i = 0; i < m_nObjects; i++)
-	{
-		for (int j = 0; j < BULLETS; j++)
-		{
-			if (ppBullets[j]->m_bActive && m_ppObjects[i]->m_xmOOBB.Intersects(ppBullets[j]->m_xmOOBB))
-			{
-				CExplosiveObject* pExplosiveObject = (CExplosiveObject*)m_ppObjects[i];
-				pExplosiveObject->m_bBlowingUp = true;
-				ppBullets[j]->Reset();
+	for (int i = 0; i < m_nObjects; i++) {
+		for (int j = 0; j < BULLETS; j++) {
+			if (ppBullets[j]->m_bActive && m_ppObjects[i]->m_xmOOBB.Intersects(ppBullets[j]->m_xmOOBB)) {
+				//CExplosiveObject* pExplosiveObject = (CExplosiveObject*)m_ppObjects[i];
+				//pExplosiveObject->m_bBlowingUp = true;
+				//ppBullets[j]->Reset();
+
+				BoundingOrientedBox collisionOOBB = m_ppObjects[i]->m_xmOOBB;
+				XMVECTOR quat = XMLoadFloat4(&collisionOOBB.Orientation);
+				XMVECTOR forward = (XMVector3Rotate(XMVectorSet(0, 0, 1, 0), quat));
+				XMVECTOR right = (XMVector3Rotate(XMVectorSet(1, 0, 0, 0), quat));
+				XMVECTOR up = (XMVector3Rotate(XMVectorSet(0, 1, 0, 0), quat));
+
+				float width = collisionOOBB.Extents.x;
+				float height = collisionOOBB.Extents.y;
+				float depth = collisionOOBB.Extents.z;
+
+				XMVECTOR center = XMLoadFloat3(&collisionOOBB.Center);
+
+				XMVECTOR plane[6];
+				plane[0] = XMPlaneFromPointNormal(center - forward * depth, -forward);
+				plane[1] = XMPlaneFromPointNormal(center + forward * depth, forward);
+				plane[2] = XMPlaneFromPointNormal(center - right * width, -right);
+				plane[3] = XMPlaneFromPointNormal(center + right * width, right);
+				plane[4] = XMPlaneFromPointNormal(center - up * height, -up);
+				plane[5] = XMPlaneFromPointNormal(center + up * height, up);
+
+				BoundingOrientedBox bulletOOBB = ppBullets[j]->m_xmOOBB;
+				for (int i = 0; i < 6; ++i) {
+					if (bulletOOBB.Intersects(plane[i]) == INTERSECTING) {
+						XMVECTOR planeNormal = { plane[i].m128_f32[0], plane[i].m128_f32[1], plane[i].m128_f32[2] };
+						XMVECTOR bulletDirection = XMLoadFloat3(&ppBullets[j]->m_xmf3MovingDirection);
+						XMVECTOR reflectionDirection = XMVector3Reflect(bulletDirection, planeNormal);
+						XMStoreFloat3(&ppBullets[j]->m_xmf3MovingDirection, reflectionDirection);
+						break;
+					}
+				}
+
+				// 벽에 총알이 충돌하면 반사각을 계산해 튕겨져 나오는건 구현완료되었는데
+				// 애매한 위치에 총알이 충돌하거나 정상적으로 작동해야할 각도인데도 이상한 방향으로 반사각이 계산되는 경우가 있음
+				// 또한 튕긴 후의 방향이 벽을 통과하는 방향이 되어 이상하게 날아가는 경우도 발생
 			}
+
 		}
 	}
 }
@@ -273,9 +296,8 @@ void CScene::Animate(float fElapsedTime)
 {
 	m_pFloorObject->Animate(fElapsedTime);
 	m_pFloorObject->ComputeWorldTransform(NULL);
-/*수정*/
-	for (int i = 0; i < m_nObjects; i++)
-	{
+	/*수정*/
+	for (int i = 0; i < m_nObjects; i++) {
 		m_ppObjects[i]->Animate(fElapsedTime);
 		m_ppObjects[i]->ComputeWorldTransform(NULL);
 		m_ppObjects[i]->UpdateBoundingBox();
@@ -297,7 +319,7 @@ void CScene::Render(HDC hDCFrameBuffer, CCamera* pCamera)
 
 	if (m_pPlayer) m_pPlayer->Render(hDCFrameBuffer, pCamera);
 
-//UI
+	//UI
 #ifdef _WITH_DRAW_AXIS
 	CGraphicsPipeline::SetViewOrthographicProjectTransform(&pCamera->m_xmf4x4ViewOrthographicProject);
 	m_pWorldAxis->SetRotationTransform(&m_pPlayer->m_xmf4x4World);
