@@ -12,12 +12,12 @@ public:
 
 private:
 	int							m_nObjects = 0;
-	CGameObject					**m_ppObjects = NULL;
-
+	//CGameObject					**m_ppObjects = NULL;
+	std::vector<CGameObject*>	m_ppObjects;
+	
 	CFloorObject*				m_pFloorObject = NULL;
 
 	CPlayer*					m_pPlayer = NULL;
-	CPlayer*					m_pTurnPlayer = NULL;
 
 #ifdef _WITH_DRAW_AXIS
 	CGameObject*				m_pWorldAxis = NULL;
@@ -26,6 +26,8 @@ private:
 public:
 	virtual void BuildObjects();
 	virtual void ReleaseObjects();
+
+	void addObject(CGameObject* object);
 
 	void CheckObjectByObjectCollisions();
 	void CheckObjectByBulletCollisions();

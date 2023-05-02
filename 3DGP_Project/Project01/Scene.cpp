@@ -13,7 +13,7 @@ CScene::~CScene()
 
 void CScene::BuildObjects()
 {
-	CExplosiveObject::PrepareExplosion();
+	//CExplosiveObject::PrepareExplosion();
 
 	float fHalfWidth = 45.0f, fHalfHeight = 45.0f, fHalfDepth = 200.0f;
 	CFloorMesh* pFloorMesh = new CFloorMesh(fHalfWidth * 2.0f, fHalfDepth * 2.0f, 30);
@@ -26,20 +26,24 @@ void CScene::BuildObjects()
 
 	CCubeMesh* pCubeMesh = new CCubeMesh(10.0f, 5.0f, 4.0f);
 
-	m_nObjects = 2;
-	m_ppObjects = new CGameObject * [m_nObjects];
+	// 두 번째 플레이어
+	CTankPlayer* aotherPlayer = new CTankPlayer();
+	aotherPlayer->SetPosition(10.0f, 1.0f, 0.0f);
+	aotherPlayer->SetCamera(nullptr);
 
-	CWallObject *pWallObject = new CWallObject();
+	addObject(aotherPlayer);
+
+	CWallObject* pWallObject = new CWallObject();
 	pWallObject->SetMesh(pCubeMesh);
 	pWallObject->SetColor(RGB(255, 0, 0));
 	pWallObject->SetPosition(40.0f, 2.5f, 0.0f);
-	m_ppObjects[0] = pWallObject;
+	addObject(pWallObject);
 
 	pWallObject = new CWallObject();
 	pWallObject->SetMesh(pCubeMesh);
 	pWallObject->SetColor(RGB(0, 0, 255));
 	pWallObject->SetPosition(-20.0f, 2.5f, 0.0f);
-	m_ppObjects[1] = pWallObject;
+	addObject(pWallObject);
 
 	/*CCubeMesh* pCubeMesh = new CCubeMesh(4.0f, 4.0f, 4.0f);
 
@@ -138,13 +142,20 @@ void CScene::ReleaseObjects()
 	if (CExplosiveObject::m_pExplosionMesh) CExplosiveObject::m_pExplosionMesh->Release();
 
 	for (int i = 0; i < m_nObjects; i++) if (m_ppObjects[i]) delete m_ppObjects[i];
-	if (m_ppObjects) delete[] m_ppObjects;
+	//if (m_ppObjects) delete[] m_ppObjects;
+	m_ppObjects.clear();
 
 	if (m_pFloorObject) delete m_pFloorObject;
 
 #ifdef _WITH_DRAW_AXIS
 	if (m_pWorldAxis) delete m_pWorldAxis;
 #endif
+}
+
+void CScene::addObject(CGameObject* object)
+{
+	m_ppObjects.push_back(object);
+	m_nObjects++;
 }
 
 void CScene::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
