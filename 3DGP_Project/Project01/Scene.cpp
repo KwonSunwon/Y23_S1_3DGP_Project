@@ -245,15 +245,19 @@ void CScene::CheckObjectByBulletCollisions()
 				//ppBullets[j]->Reset();
 
 				BoundingOrientedBox collisionOOBB = m_ppObjects[i]->m_xmOOBB;
+				// oobb 의 회전각도 
 				XMVECTOR quat = XMLoadFloat4(&collisionOOBB.Orientation);
+				// oobb 의 회전각도를 이용하여 forward, right, up 벡터를 구함
 				XMVECTOR forward = (XMVector3Rotate(XMVectorSet(0, 0, 1, 0), quat));
 				XMVECTOR right = (XMVector3Rotate(XMVectorSet(1, 0, 0, 0), quat));
 				XMVECTOR up = (XMVector3Rotate(XMVectorSet(0, 1, 0, 0), quat));
 
+				// oobb 의 너비, 높이, 깊이
 				float width = collisionOOBB.Extents.x;
 				float height = collisionOOBB.Extents.y;
 				float depth = collisionOOBB.Extents.z;
 
+				// oobb 의 중심점
 				XMVECTOR center = XMLoadFloat3(&collisionOOBB.Center);
 
 				XMVECTOR plane[6];
@@ -278,6 +282,11 @@ void CScene::CheckObjectByBulletCollisions()
 				// 벽에 총알이 충돌하면 반사각을 계산해 튕겨져 나오는건 구현완료되었는데
 				// 애매한 위치에 총알이 충돌하거나 정상적으로 작동해야할 각도인데도 이상한 방향으로 반사각이 계산되는 경우가 있음
 				// 또한 튕긴 후의 방향이 벽을 통과하는 방향이 되어 이상하게 날아가는 경우도 발생
+				// 5.2 7:49
+				// 총알의 속도를 절반으로 해서 테스트를 진행해 봤는데 기존의 높은 속도가 충돌 판정을 하는 데 있어
+				// 제대로된 결과를 주지 못한게 아닌가 하는 생각이 들었음.
+				// 그리고 속도를 낮췄음에도 불구하고 여전히 이상한 방향으로 튕겨져 나가는 경우가 있음(모서리에 맞추는 경우)
+				// 면에 정확히 맞는 경우에 이상한 방향으로 튕겨져 나가는 경우는 줄어든거 같음
 			}
 
 		}

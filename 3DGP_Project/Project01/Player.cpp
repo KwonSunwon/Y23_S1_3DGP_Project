@@ -244,7 +244,8 @@ CTankPlayer::CTankPlayer()
 		m_ppBullets[i]->SetMesh(pBulletMesh);
 		m_ppBullets[i]->SetRotationAxis(XMFLOAT3(0.0f, 0.0f, 1.0f));
 		m_ppBullets[i]->SetRotationSpeed(360.0f);
-		m_ppBullets[i]->SetMovingSpeed(120.0f);
+		// 처음 속도 120.0
+		m_ppBullets[i]->SetMovingSpeed(60.0f);
 		m_ppBullets[i]->SetActive(false);
 	}
 }
