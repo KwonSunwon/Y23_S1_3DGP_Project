@@ -29,6 +29,8 @@ public:
 
 	void addObject(CGameObject* object);
 
+	CPlayer* PlayerChange();
+
 	void CheckObjectByObjectCollisions();
 	void CheckObjectByBulletCollisions();
 	void CheckObjectByPlayerCollisions();
