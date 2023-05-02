@@ -177,8 +177,3 @@ void CCamera::Update(CPlayer* pPlayer, XMFLOAT3& xmf3LookAt, float fTimeElapsed)
 		SetLookAt(pPlayer->m_xmf3Position, pPlayer->m_xmf3Up);
 	}
 }
-
-void CCamera::MakeTurnChangeMovement(CPlayer* pPlayer)
-{
-	// 카메라의 현재 위치에서 다음 차례 플레이어의 위치로 이동하는 카메라 워크를 설정
-}

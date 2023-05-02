@@ -169,7 +169,6 @@ CPlayer* CScene::PlayerChange()
 	m_ppObjects[0] = temp;
 	((CPlayer*)m_ppObjects[0])->SetCamera(nullptr);
 	m_pPlayer->m_pCamera->m_startPosition = temp->GetPosition();
-	m_pPlayer->m_pCamera->MakeTurnChangeMovement(m_pPlayer);
 	m_pPlayer->m_bActive = false;
 	return m_pPlayer;
 }

@@ -71,7 +71,5 @@ public:
 	void Rotate(float fPitch = 0.0f, float fYaw = 0.0f, float fRoll = 0.0f);
 	void Update(CPlayer* pPlayer, XMFLOAT3& xmf3LookAt, float fTimeElapsed = 0.016f);
 
-	void MakeTurnChangeMovement(CPlayer* pPlayer);
-
 	bool IsInFrustum(BoundingOrientedBox& xmBoundingBox);
 };
