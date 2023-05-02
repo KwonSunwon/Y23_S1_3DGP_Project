@@ -51,6 +51,10 @@ public:
 
 	CViewport					m_Viewport;
 
+	// 턴 변경 카메라 워크를 위한 변수
+	XMFLOAT3 m_startPosition;
+	float m_time = 0.0f;
+
 public:
 	void SetFOVAngle(float fFOVAngle);
 
@@ -66,6 +70,8 @@ public:
 	void Move(float x, float y, float z);
 	void Rotate(float fPitch = 0.0f, float fYaw = 0.0f, float fRoll = 0.0f);
 	void Update(CPlayer* pPlayer, XMFLOAT3& xmf3LookAt, float fTimeElapsed = 0.016f);
+
+	void MakeTurnChangeMovement(CPlayer* pPlayer);
 
 	bool IsInFrustum(BoundingOrientedBox& xmBoundingBox);
 };

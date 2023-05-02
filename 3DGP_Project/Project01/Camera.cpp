@@ -127,6 +127,27 @@ void CCamera::Rotate(float fPitch, float fYaw, float fRoll)
 
 void CCamera::Update(CPlayer* pPlayer, XMFLOAT3& xmf3LookAt, float fTimeElapsed)
 {
+	// 플레이어가 활성화 된 경우 장상적인 카메라 업데이트 수행
+	// 비활성화 상태인 경우 턴 전환 카메라 워크 수행
+	if (!pPlayer->GetActive()) {
+		FXMVECTOR p1 = XMLoadFloat3(&m_startPosition);
+		FXMVECTOR p4 = XMLoadFloat3(&pPlayer->GetPosition());
+		FXMVECTOR p2 = XMVector3Transform(p1, XMMatrixTranslation(0.0f, 10.0f, 0.0f));
+		FXMVECTOR p3 = XMVector3Transform(p4, XMMatrixTranslation(0.0f, 10.0f, 0.0f));
+		XMVECTOR position = XMVectorCatmullRom(p1, p2, p3, p4, m_time);
+		m_time += fTimeElapsed * 0.5f;
+		XMStoreFloat3(&m_xmf3Position, position);
+		// 다음 차례인 플레이어를 보면서 이동
+		SetLookAt(pPlayer->m_xmf3Position, pPlayer->m_xmf3Up);
+
+		// 카메라가 다음 차례 플레이어의 위치에 도달하면 다시 플레이어 활성화
+		if (m_time >= 1.0f) {
+			m_time = 0.0f;
+			pPlayer->SetActive(true);
+		}
+		return;
+	}
+
 	// 카메라가 플레이어의 터렛의 위치를 바라보도록 설정
 	XMFLOAT3 xmf3TurretLook = ((CTankPlayer*)pPlayer)->m_pTurret->GetLook();
 	XMFLOAT3 xmf3TurretUp = ((CTankPlayer*)pPlayer)->m_pTurret->GetUp();
@@ -157,3 +178,7 @@ void CCamera::Update(CPlayer* pPlayer, XMFLOAT3& xmf3LookAt, float fTimeElapsed)
 	}
 }
 
+void CCamera::MakeTurnChangeMovement(CPlayer* pPlayer)
+{
+	// 카메라의 현재 위치에서 다음 차례 플레이어의 위치로 이동하는 카메라 워크를 설정
+}
