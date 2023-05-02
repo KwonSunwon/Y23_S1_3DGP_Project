@@ -30,6 +30,7 @@ void CScene::BuildObjects()
 	CTankPlayer* aotherPlayer = new CTankPlayer();
 	aotherPlayer->SetPosition(10.0f, 1.0f, 0.0f);
 	aotherPlayer->SetCamera(nullptr);
+	aotherPlayer->SetCameraOffset(XMFLOAT3(0.0f, 5.0f, -15.0f));
 	addObject(aotherPlayer);
 
 	CWallObject* pWallObject = new CWallObject();
@@ -162,7 +163,6 @@ CPlayer* CScene::PlayerChange()
 	CPlayer* temp = m_pPlayer;
 	m_pPlayer = (CPlayer*)m_ppObjects[0];
 	m_pPlayer->SetCamera(temp->GetCamera());
-	m_pPlayer->SetCameraOffset(temp->m_xmf3CameraOffset);
 	m_ppObjects[0] = temp;
 	((CPlayer*)m_ppObjects[0])->SetCamera(nullptr);
 	return m_pPlayer;
