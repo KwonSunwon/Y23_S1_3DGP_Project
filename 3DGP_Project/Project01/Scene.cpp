@@ -30,6 +30,9 @@ void CScene::BuildObjects()
 	CTankPlayer* aotherPlayer = new CTankPlayer();
 	aotherPlayer->SetPosition(10.0f, 1.0f, 0.0f);
 	aotherPlayer->SetCamera(nullptr);
+	//aotherPlayer->SetCameraOffset(XMFLOAT3(0.0f, 5.0f, -10.0f));
+	// SetCameraOffset() 안에 Camera 객체를 사용하는 코드가 있어서 null 상태에서 호출하면 오류 발생함
+	// 턴 바꿀 때마다 Offset도 바꿔주는 방식으로 해야할 듯
 	addObject(aotherPlayer);
 
 	CWallObject* pWallObject = new CWallObject();
